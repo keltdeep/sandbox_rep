@@ -2,6 +2,7 @@
 /dist
 /node_modules
 .env
+docker.env
 
 # Logs
 logs
@@ -21,6 +22,7 @@ lerna-debug.log*
 
 # IDEs and editors
 /.idea
+../.idea
 .project
 .classpath
 .c9/

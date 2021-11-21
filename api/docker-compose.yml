@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+  dev:
+    container_name: sandbox-dev
+    image: sandbox-dev:1.0.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    ports:
+      - 3001:3001
+      - 9229:9229
+    networks:
+      - sandbox-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - "6543:5432"
+    volumes:
+      - /data/postgres:/data/postgres
+    env_file:
+      - docker.env
+    networks:
+      - sandbox-network
+
+  redis:
+    image: redis
+    container_name: 'redis'
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - /etc/redis/redis.conf:/etc/redis/redis.conf
+    networks:
+      - sandbox-network
+
+#  pgadmin:
+#    links:
+#      - postgres:postgres
+#    container_name: pgadmin
+#    image: dpage/pgadmin4
+#    ports:
+#      - "8080:80"
+#    volumes:
+#      - /data/pgadmin:/root/.pgadmin
+#    env_file:
+#      - docker.env
+#    networks:
+#      - sandbox-network
+
+networks:
+  sandbox-network:
+    driver: bridge
